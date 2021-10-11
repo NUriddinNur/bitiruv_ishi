@@ -13,7 +13,7 @@ class User:
 
     # __________________________________________ main function ___________________________________________________
     def regist_or_login(self):
-    	print()
+    	print("salom")
         pass
 
 
