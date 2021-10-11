@@ -16,7 +16,6 @@ class User:
 
         self.registr_or_login()
 
-        # self.create_table()
 
    #__________________________________________________ main function ________________________________________________
     def registr_or_login(self):
@@ -137,6 +136,8 @@ class User:
             self.update_login()
         elif input_select_option == '4':
             self.update_password()
+        elif input_select_option == '5':
+            self.delete_accaunt()
         else:
             self.clear_windov()
             self.__init__()
@@ -176,7 +177,21 @@ class User:
         self.user_page()
 
     def delete_accaunt(self):
-        pass
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="admin",
+            password="123456789",
+            database="user_info"
+        )
+
+        mycursor = mydb.cursor()
+        mycursor.execute(f"delete from user2 where id={self.user_id}")
+        mydb.commit()
+        self.clear_windov()
+        print("\n\n\n\t\t\nAccaun o'chirildi !!!")
+        time.sleep(2)
+        self.clear_windov()
+        self.registr_or_login()
 
 
 
