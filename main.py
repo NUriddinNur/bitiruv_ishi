@@ -39,9 +39,23 @@ class User:
             input_name = input("Ismingizni kiriting: ").strip().capitalize()
 
         input_nic_name = input("Nic_name kiriting: ").strip()
-        while not input_nic_name.isalpha():
+        while not input_nic_name.isalpha() or self.bazadan_tekshirish(input_nic_name):
+            self.clear_windov()
+            if self.bazadan_tekshirish(input_nic_name):
+                print("Bunday nic name mavjud ")
+            else:
+                print("invalid input !!! ")
+            input_nic_name = input("Nic_name qayta kiriting: ").strip()
 
-        print("good")
+        input_age = input("yoshingizni kiriting: ").strip()
+        while not input_age.isnumeric():
+            self.clear_windov()
+            print("invalid input !!!")
+            input_age = input("yoshingizni qayta kiriting: ").strip()
+
+        
+
+        print("shoot")
 
 
 
@@ -71,7 +85,22 @@ class User:
 
 
 
-    # ______________________________________________ assistant function _____________________________
+    # ______________________________________________ assistant function ____________________________________
+
+    def bazadan_tekshirish(self, data):
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="admin",
+            password="123456789",
+            database="user_info"
+        )
+        mycursor = mydb.cursor()
+        mycursor.execute(f"select * from user2 where nic_name='{data}'")
+        result = mycursor.fetchall()
+        if len(result) == 0:
+            return False
+        return True
+
 
     @staticmethod
     def clear_windov():
