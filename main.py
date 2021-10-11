@@ -13,7 +13,6 @@ class User:
         self.singl = '1'
         self.user_id = None
 
-        # self.check_log_pass("aaa", "2323")
 
         self.registr_or_login()
 
@@ -91,7 +90,7 @@ class User:
             self.singl = '0'
 
         self.write_in_database()
-        self.user_id = self.id(input_nic_name)
+        self.user_id = self.id(input_login)
         self.clear_windov()
         print(f"\n\n\n\t\t Janob {self.name} siz muvofaqqiyatli ro'yxatdan o'tdingiz !!! ")
         time.sleep(2)
@@ -113,8 +112,10 @@ class User:
             print("Login yoki password xato !!! ")
             input_login = input("login qayta kiriting: ").strip()
             input_password = input("Password qayta kiriting: ").strip()
+        self.user_id = self.id(input_login)
         self.clear_windov()
         self.user_page()
+
 
 
     def user_page(self):
@@ -124,22 +125,42 @@ class User:
         while input_select_option not in options:
             self.clear_windov()
             self.message_user_page()
+
             input_select_option = input("[1/2/3/4/5/6]: ")
+
 
         if input_select_option == '1':
             print("pochtani tekshirish")
         elif input_select_option == '2':
             print("xabar qoldirish")
         elif input_select_option == '3':
-            print("login ozgartirish")
+            self.update_login()
         elif input_select_option == '4':
             print("Password o;zgartirish")
         else:
             self.clear_windov()
             self.__init__()
 
-        print("good")
 
+
+    def update_login(self):
+        input_new_login = input("Yangi loginni kiriting: ").strip()
+        while not input_new_login.isalnum() or self.bazadan_tekshirish("login", input_new_login):
+            self.clear_windov()
+            if self.bazadan_tekshirish("login", input_new_login):
+                print("Bunday login mavjud !!! ")
+                input_new_login = input("Login qayta kiriting: ").strip()
+            else:
+                print("Invalit input !!!")
+                input_new_login = input("Login qayta kiriting: ").strip()
+        self.update_database("login", input_new_login)
+        self.user_page()
+
+    def update_password(self):
+        pass
+
+    def delete_accaunt(self):
+        pass
 
 
 
@@ -219,7 +240,7 @@ class User:
         mycursor.execute(f"insert into user2(name, nic_name, age, login, password, single) values('{self.name}', '{self.nic_name}', '{self.age}', '{self.login}', '{self.password}', '{self.singl}');")
         mydb.commit()
 
-    def id(self, nicname):
+    def id(self, log):
         mydb = mysql.connector.connect(
             host="localhost",
             user="admin",
@@ -228,9 +249,9 @@ class User:
         )
 
         mycursor = mydb.cursor()
-        mycursor.execute(f"select id from user2 where nic_name='{nicname}'")
-        result = mycursor.fetchall()[0][0]
-        return result
+        mycursor.execute(f"select id from user2 where login='{log}'")
+        result = mycursor.fetchall()
+        return result[0][0]
 
     def check_log_pass(self, log, pas):
         mydb = mysql.connector.connect(
@@ -247,6 +268,18 @@ class User:
             return False
         else:
             return True
+
+    def update_database(self, data, new_login):
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="admin",
+            password="123456789",
+            database="user_info"
+        )
+
+        mycursor = mydb.cursor()
+        mycursor.execute(f"update user2 set {data}='{new_login}' where id='{self.user_id}';")
+        mydb.commit()
 
 
 
