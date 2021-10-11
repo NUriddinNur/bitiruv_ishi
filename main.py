@@ -136,7 +136,7 @@ class User:
         elif input_select_option == '3':
             self.update_login()
         elif input_select_option == '4':
-            print("Password o;zgartirish")
+            self.update_password()
         else:
             self.clear_windov()
             self.__init__()
@@ -154,10 +154,26 @@ class User:
                 print("Invalit input !!!")
                 input_new_login = input("Login qayta kiriting: ").strip()
         self.update_database("login", input_new_login)
+        self.clear_windov()
+        print("\n\n\n\t\tLogin o'zgartirildi !!!")
+        time.sleep(2)
+        self.clear_windov()
         self.user_page()
 
     def update_password(self):
-        pass
+        input_new_password = input("Password kiriting: ").strip()
+        check_password = input("Passwordni takroran kiriting: ").strip()
+        while input_new_password != check_password or len(input_new_password) == 0:
+            self.clear_windov()
+            print("Passwordni qayta kiriting !!!")
+            input_new_password = input("Password kiriting: ").strip()
+            check_password = input("Passwordni takroran kiriting: ").strip()
+        self.update_database("password", input_new_password)
+        self.clear_windov()
+        print("\n\n\n\t\tPassword o'zgartirildi !!!")
+        time.sleep(2)
+        self.clear_windov()
+        self.user_page()
 
     def delete_accaunt(self):
         pass
