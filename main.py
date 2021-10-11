@@ -13,6 +13,7 @@ class User:
         self.singl = '1'
         self.user_id = None
 
+        # self.check_log_pass("aaa", "2323")
 
         self.registr_or_login()
 
@@ -104,11 +105,18 @@ class User:
 
 
     def log_in(self):
-        print(self.user_id)
+        self.clear_windov()
         input_login = input("login kiriting: ").strip()
         input_password = input("Password kiriting: ").strip()
-        while self.bazadan_tekshirish("login", input_login) and self.bazadan_tekshirish("password", input_password):
+        while self.check_log_pass(input_login, input_password):
+            self.clear_windov()
             print("Login yoki password xato !!! ")
+            input_login = input("login qayta kiriting: ").strip()
+            input_password = input("Password qayta kiriting: ").strip()
+
+
+        print("good")
+
 
 
 
@@ -191,6 +199,21 @@ class User:
         result = mycursor.fetchall()[0][0]
         return result
 
+    def check_log_pass(self, log, pas):
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="admin",
+            password="123456789",
+            database="user_info"
+        )
+
+        mycursor = mydb.cursor()
+        mycursor.execute(f"select login, password from user2 where login='{log}' and password='{pas}'")
+        result = mycursor.fetchall()
+        if len(result) == 1:
+            return False
+        else:
+            return True
 
 
 
