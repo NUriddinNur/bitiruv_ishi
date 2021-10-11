@@ -113,7 +113,30 @@ class User:
             print("Login yoki password xato !!! ")
             input_login = input("login qayta kiriting: ").strip()
             input_password = input("Password qayta kiriting: ").strip()
+        self.clear_windov()
+        self.user_page()
 
+
+    def user_page(self):
+        self.message_user_page()
+        input_select_option = input("[1/2/3/4/5/6]: ")
+        options = ['1', '2', '3', '4', '5', '6']
+        while input_select_option not in options:
+            self.clear_windov()
+            self.message_user_page()
+            input_select_option = input("[1/2/3/4/5/6]: ")
+
+        if input_select_option == '1':
+            print("pochtani tekshirish")
+        elif input_select_option == '2':
+            print("xabar qoldirish")
+        elif input_select_option == '3':
+            print("login ozgartirish")
+        elif input_select_option == '4':
+            print("Password o;zgartirish")
+        else:
+            self.clear_windov()
+            self.__init__()
 
         print("good")
 
@@ -132,6 +155,16 @@ class User:
             
         """)
 
+    @staticmethod
+    def message_user_page():
+        print("""
+            Pochtani tekshirish      [1]
+            Xabar yuborish           [2]
+            Loginni o'zgartirish     [3]
+            Passwordni o'zgartirish  [4]
+            Accauntni o'chirish      [5]
+            Tizimdan chiqish         [6]
+        """)
 
 
     # ______________________________________________ assistant function ____________________________________
