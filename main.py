@@ -1,5 +1,6 @@
 import os
 import mysql.connector
+import time
 
 
 class User:
@@ -10,6 +11,8 @@ class User:
         self.login = None
         self.password = None
         self.singl = '1'
+        self.user_id = None
+
 
         self.registr_or_login()
 
@@ -28,7 +31,7 @@ class User:
         if input_select_option == '1':
             self.register()
         else:
-            print("log in")
+            self.log_in()
 
     def register(self):
         self.clear_windov()
@@ -85,23 +88,27 @@ class User:
         self.password = input_password
         if input_singl == select_option[1:]:
             self.singl = '0'
-            
+
+        self.write_in_database()
+        self.user_id = self.id(input_nic_name)
+        self.clear_windov()
+        print(f"\n\n\n\t\t Janob {self.name} siz muvofaqqiyatli ro'yxatdan o'tdingiz !!! ")
+        time.sleep(2)
+        self.clear_windov()
+        self.registr_or_login()
+
+
 
         print("shoot")
 
 
 
-
-
-
-
-
-
-
-
-
     def log_in(self):
-        pass
+        print(self.user_id)
+        input_login = input("login kiriting: ").strip()
+        input_password = input("Password kiriting: ").strip()
+        while self.bazadan_tekshirish("login", input_login) and self.bazadan_tekshirish("password", input_password):
+            print("Login yoki password xato !!! ")
 
 
 
@@ -110,6 +117,8 @@ class User:
     @staticmethod
     def first_message():
         print("""
+            Tizimga kirish !!!
+        
             register    [1]
             login       [2]
             
@@ -138,7 +147,6 @@ class User:
     def clear_windov():
         os.system("clear")
 
-
     def create_table(self):
         mydb = mysql.connector.connect(
             host="localhost",
@@ -158,8 +166,30 @@ class User:
 
         mydb.commit()
 
+    def write_in_database(self):
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="admin",
+            password="123456789",
+            database="user_info"
+        )
 
+        mycursor = mydb.cursor()
+        mycursor.execute(f"insert into user2(name, nic_name, age, login, password, single) values('{self.name}', '{self.nic_name}', '{self.age}', '{self.login}', '{self.password}', '{self.singl}');")
+        mydb.commit()
 
+    def id(self, nicname):
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="admin",
+            password="123456789",
+            database="user_info"
+        )
+
+        mycursor = mydb.cursor()
+        mycursor.execute(f"select id from user2 where nic_name='{nicname}'")
+        result = mycursor.fetchall()[0][0]
+        return result
 
 
 
