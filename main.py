@@ -9,7 +9,7 @@ class User:
         self.age = None
         self.login = None
         self.password = None
-        self.singl = True
+        self.singl = '1'
 
         self.registr_or_login()
 
@@ -36,12 +36,12 @@ class User:
         while not input_name.isalpha():
             self.clear_windov()
             print("Invalid input !!!")
-            input_name = input("Ismingizni kiriting: ").strip().capitalize()
+            input_name = input("Ismingizni qayta kiriting: ").strip().capitalize()
 
         input_nic_name = input("Nic_name kiriting: ").strip()
-        while not input_nic_name.isalpha() or self.bazadan_tekshirish(input_nic_name):
+        while not input_nic_name.isalpha() or self.bazadan_tekshirish("nic_name", input_nic_name):
             self.clear_windov()
-            if self.bazadan_tekshirish(input_nic_name):
+            if self.bazadan_tekshirish("nic_name",input_nic_name):
                 print("Bunday nic name mavjud ")
             else:
                 print("invalid input !!! ")
@@ -53,7 +53,39 @@ class User:
             print("invalid input !!!")
             input_age = input("yoshingizni qayta kiriting: ").strip()
 
-        
+        input_login = input("Login kiriting: ").strip()
+        while not input_login.isalnum() or self.bazadan_tekshirish("login", input_login):
+            self.clear_windov()
+            if self.bazadan_tekshirish("login", input_login):
+                print("Bunday login mavjud !!! ")
+            else:
+                print("Invalit input !!!")
+            input_login = input("Login qayta kiriting: ").strip()
+
+        input_password = input("Password kiriting: ").strip()
+        check_password = input("Passwordni takroran kiriting: ").strip()
+        while input_password != check_password or len(input_password) == 0:
+            self.clear_windov()
+            print("Passwordni qayta kiriting !!!")
+            input_password = input("Password kiriting: ").strip()
+            check_password = input("Passwordni takroran kiriting: ").strip()
+
+        input_singl = input("Oilalimisiz [y/n]: ").strip()
+        select_option = ['y', 'yes', 'n', 'no']
+        while not input_singl in select_option:
+            self.clear_windov()
+            print("invalid input !!! ")
+            input_singl = input("[y/n]: ").strip()
+
+
+        self.name = input_name
+        self.nic_name = input_nic_name
+        self.age = input_age
+        self.login = input_login
+        self.password = input_password
+        if input_singl == select_option[1:]:
+            self.singl = '0'
+            
 
         print("shoot")
 
@@ -87,7 +119,7 @@ class User:
 
     # ______________________________________________ assistant function ____________________________________
 
-    def bazadan_tekshirish(self, data):
+    def bazadan_tekshirish(self, data_in_base, data):
         mydb = mysql.connector.connect(
             host="localhost",
             user="admin",
@@ -95,7 +127,7 @@ class User:
             database="user_info"
         )
         mycursor = mydb.cursor()
-        mycursor.execute(f"select * from user2 where nic_name='{data}'")
+        mycursor.execute(f"select {data_in_base} from user2 where {data_in_base}='{data}'")
         result = mycursor.fetchall()
         if len(result) == 0:
             return False
